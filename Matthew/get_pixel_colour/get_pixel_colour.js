@@ -83,3 +83,5 @@ document.addEventListener("click", function(e){
     console.log("converting "+hex+" to (r,g,b):"+result)
     document.getElementById("canvas").innerHTML = "mouse clicked";
 });
+
+console.log("DEFAULT_COLORS:"+DEFAULT_COLORS)
