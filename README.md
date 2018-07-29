@@ -21,3 +21,14 @@ sample code: chroma-key-demo.html
     2. 2 - Remove the chroma range
     3. 3 - Replaced by the given colour)
 
+
+## colour_space_conv.js 
+
+A simple Javascript program which converts colour spaces between RGB and LAB. Based on the codes on https://github.com/antimatter15/rgb-lab.
+
+### Usage
+
+**Functions**
+  * lab2rgb: converts from LAB to RGB
+  * rgb2lab: converts from RGB to LAB
+  * deltaE: calculate the perceptual distance between colors in CIELAB
