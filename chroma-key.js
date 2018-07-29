@@ -4,6 +4,7 @@
 
 // --------- change log ----------
 // Modified by Duke Wu July 2018
+// Algorithm improved & colour replacement feature added
 
 // images must be from same domain as web page for security reasons
 // chroma-key attribute is hex color or rgb color
@@ -11,22 +12,20 @@
 
 
 var chroma_key = {
-  start: function ()
-  {
+  start: function () {
     var images = document.getElementsByTagName("img");
 
-    for (var i = 0; i < images.length; ++i)
-    {
+    for (var i = 0; i < images.length; ++i) {
       var image = images[i];
       var key = this.get_chroma_key(image);
       var alpha = image.getAttribute("data-alpha");
-	  
-	  var rr = image.getAttribute("data-rr");
-	  var rg = image.getAttribute("data-rg");
-	  var rb = image.getAttribute("data-rb");
-	  var adv = image.getAttribute("adv");
 
-      if (!key  && !alpha)
+      var rr = image.getAttribute("data-rr");
+      var rg = image.getAttribute("data-rg");
+      var rb = image.getAttribute("data-rb");
+      var adv = image.getAttribute("adv");
+
+      if (!key && !alpha)
         continue;
 
       var d = this.get_delta(image);
@@ -65,11 +64,9 @@ var chroma_key = {
     }
   },
 
-  apply_alpha: function (canvas, ctx, alpha)
-  {
+  apply_alpha: function (canvas, ctx, alpha) {
     var alpha_image = new Image();
-    alpha_image.onload = function ()
-    {
+    alpha_image.onload = function () {
       // executes when the alpha image has loaded
       alpha_canvas = document.createElement("canvas");
       alpha_canvas.setAttribute("width", alpha_image.width);
@@ -92,62 +89,55 @@ var chroma_key = {
     alpha_image.src = alpha;
   },
 
-  apply_key: function (canvas, ctx, key, d, rr, rg, rb, adv)
-  {
+  apply_key: function (canvas, ctx, key, d, rr, rg, rb, adv) {
     var frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-    for (var j = 0; j < frame.data.length; j += 4)
-    {
+    for (var j = 0; j < frame.data.length; j += 4) {
       var r = frame.data[j];
-      var g = frame.data[j+1];
-      var b = frame.data[j+2];
+      var g = frame.data[j + 1];
+      var b = frame.data[j + 2];
 
       if (key.r - d <= r && r < key.r + d &&
-          key.g - d <= g && g < key.g + d &&
-          key.b - d <= b && b < key.b + d)
-      {
-		  if (adv == 1) {
-		frame.data[j + 0] = rr - (key.r - r);
-		frame.data[j + 1] = rg - (key.g - g);
-		frame.data[j + 2] = rb - (key.b - b);
-		  } else {
-		frame.data[j + 0] = rr;
-		frame.data[j + 1] = rg;
-		frame.data[j + 2] = rb;
-		  }
-      } else {
-
-	  }
+        key.g - d <= g && g < key.g + d &&
+        key.b - d <= b && b < key.b + d) {
+        if (adv == 1) {
+          frame.data[j + 0] = rr - (key.r - r);
+          frame.data[j + 1] = rg - (key.g - g);
+          frame.data[j + 2] = rb - (key.b - b);
+        } else {
+          frame.data[j + 0] = rr;
+          frame.data[j + 1] = rg;
+          frame.data[j + 2] = rb;
+        }
+      }
     }
 
     ctx.putImageData(frame, 0, 0);
   },
 
-  get_chroma_key: function (image)
-  {
+  get_chroma_key: function (image) {
     var n, p = parseInt
-	var color_r = image.getAttribute("ckey-r");
-	var color_g = image.getAttribute("ckey-g");
-	var color_b = image.getAttribute("ckey-b");
-	var color = this.rgbToHex(color_r, color_g, color_b);
+    var color_r = image.getAttribute("ckey-r");
+    var color_g = image.getAttribute("ckey-g");
+    var color_b = image.getAttribute("ckey-b");
+    var color = this.rgbToHex(color_r, color_g, color_b);
 
     if (n = /^\s*#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})/.exec(color))
-      return {r:p(n[1],16), g:p(n[2],16), b:p(n[3],16)}; 
+      return { r: p(n[1], 16), g: p(n[2], 16), b: p(n[3], 16) };
 
     if (n = /^\s*#([\da-fA-F])([\da-fA-F])([\da-fA-F])/.exec(color))
-      return {r:p(n[1],16)*17, g:p(n[2],16)*17, b:p(n[3],16)*17};
+      return { r: p(n[1], 16) * 17, g: p(n[2], 16) * 17, b: p(n[3], 16) * 17 };
 
     if (n = /^\s*rgb\(\s*([\d]+)\s*,\s*([\d]+)\s*,\s*([\d]+)\s*\)/.exec(color))
-      return {r:p(n[1]), g:p(n[2]), b:p(n[3])};
+      return { r: p(n[1]), g: p(n[2]), b: p(n[3]) };
 
     if (n = /^\s*rgba\(\s*([\d]+)\s*,\s*([\d]+)\s*,\s*([\d]+)\s*,\s*([\d]+|[\d]*.[\d]+)\s*\)/.exec(color))
-      return {r:p(n[1]), g:p(n[2]), b:p(n[3]), a:p(n[4])};
+      return { r: p(n[1]), g: p(n[2]), b: p(n[3]), a: p(n[4]) };
 
     return null;
   },
 
-  get_delta: function (image)
-  {
+  get_delta: function (image) {
     var delta = image.getAttribute("data-delta");
 
     if (delta == null)
@@ -156,19 +146,19 @@ var chroma_key = {
     delta = parseInt(delta);
     return isNaN(delta) ? 10 : delta;
   },
-  
-	componentToHex: function(c) {
-	if (c == null) return "00";
 
-		var hexNum = parseInt(c, 10);
-		var hex = hexNum.toString(16);
+  componentToHex: function (c) {
+    if (c == null) return "00";
 
-		return hex.length == 1 ? "0" + hex : hex;
-	},
+    var hexNum = parseInt(c, 10);
+    var hex = hexNum.toString(16);
 
-	 rgbToHex: function(r, g, b) {
-		return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
-	}
+    return hex.length == 1 ? "0" + hex : hex;
+  },
+
+  rgbToHex: function (r, g, b) {
+    return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+  }
 };
 
-window.addEventListener("load", function() { chroma_key.start(); }, false); 
+window.addEventListener("load", function () { chroma_key.start(); }, false); 
