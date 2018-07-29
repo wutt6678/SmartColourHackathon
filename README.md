@@ -6,16 +6,17 @@ A simple Javascript program whch allows users to replace a chroma range to a dif
 
 ### Usage
 
-**Attributes in HTML**
-*ckey-r - Chroma range red value
-*ckey-g - Chroma range green value
-*ckey-b - Chroma rance blue value
+**Attributes in HTML:**
 
-*data-rr - Replacement red value
-*data-rg - Replacement green value
-*data-rb - Replacement blue value
+* ckey-r - Chroma range red value
+* ckey-g - Chroma range green value
+* ckey-b - Chroma rance blue value
 
-*data-delta - Width of the chroma range
-*adv - Advanced feature (1 - Replaced by a chroma range ; else - Replaced by the given colour)
+* data-rr - Replacement red value
+* data-rg - Replacement green value
+* data-rb - Replacement blue value
+
+* data-delta - Width of the chroma range
+* adv - Advanced feature (1 - Replaced by a chroma range ; else - Replaced by the given colour)
 
 
