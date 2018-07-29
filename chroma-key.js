@@ -96,6 +96,9 @@ var chroma_key = {
       var r = frame.data[j];
       var g = frame.data[j + 1];
       var b = frame.data[j + 2];
+      var alpha = frame.data[j + 3];
+
+
 
       if (key.r - d <= r && r < key.r + d &&
         key.g - d <= g && g < key.g + d &&
@@ -104,6 +107,8 @@ var chroma_key = {
           frame.data[j + 0] = rr - (key.r - r);
           frame.data[j + 1] = rg - (key.g - g);
           frame.data[j + 2] = rb - (key.b - b);
+        } else if (adv == 2) {
+          frame.data[j + 3] = 0;
         } else {
           frame.data[j + 0] = rr;
           frame.data[j + 1] = rg;
@@ -111,7 +116,6 @@ var chroma_key = {
         }
       }
     }
-
     ctx.putImageData(frame, 0, 0);
   },
 
